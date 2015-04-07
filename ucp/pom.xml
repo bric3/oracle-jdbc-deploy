@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.oracle</groupId>
+        <artifactId>oracle-jdbc-deploy</artifactId>
+        <version>12.1.0.2</version>
+    </parent>
+
+    <artifactId>ucp</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <ucp.jar>${oracle.dir}/ucp.jar</ucp.jar>
+        <ucp_javadoc.zip>${oracle.dir}/ucp_javadoc.zip</ucp_javadoc.zip>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>file-checksums</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${ucp.jar}</file>
+                                    <checksum>ef4f2f99b07ee26673be62bbdccce78b0209042c</checksum>
+                                </fileChecksum>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${ucp_javadoc.zip}</file>
+                                    <checksum>80d5a699b72edb8d29b1650786f98467504f8577</checksum>
+                                </fileChecksum>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>deploy-jars</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                            <packaging>jar</packaging>
+                            <file>${ucp.jar}</file>
+                            <javadoc>${ucp_javadoc.zip}</javadoc>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

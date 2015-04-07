@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.oracle</groupId>
+        <artifactId>oracle-jdbc-deploy</artifactId>
+        <version>12.1.0.2</version>
+    </parent>
+
+    <artifactId>ojdbc7</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <ojdbc7.jar>${oracle.dir}/ojdbc7.jar</ojdbc7.jar>
+        <ojdbc7_g.jar>${oracle.dir}/ojdbc7_g.jar</ojdbc7_g.jar>
+        <ojdbc7dms.jar>${oracle.dir}/ojdbc7dms.jar</ojdbc7dms.jar>
+        <ojdbc7dms_g.jar>${oracle.dir}/ojdbc7dms_g.jar</ojdbc7dms_g.jar>
+        <javadoc.zip>${oracle.dir}/javadoc.zip</javadoc.zip>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>file-checksums</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${ojdbc7.jar}</file>
+                                    <checksum>7c9b5984b2c1e32e7c8cf3331df77f31e89e24c2</checksum>
+                                </fileChecksum>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${ojdbc7_g.jar}</file>
+                                    <checksum>fecab09de23a6e44c027b22aa098b6aaf69b06ca</checksum>
+                                </fileChecksum>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${ojdbc7dms.jar}</file>
+                                    <checksum>f291988f5fdf9eaf846f6ca7d8139b2a4600cd4b</checksum>
+                                </fileChecksum>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${ojdbc7dms_g.jar}</file>
+                                    <checksum>87fd22c23937ab3b83fb3896bdc80cbe7c56aa44</checksum>
+                                </fileChecksum>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${javadoc.zip}</file>
+                                    <checksum>fe3bcaf5f81b812bb8b026806eb90ccfdf980df9</checksum>
+                                </fileChecksum>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>deploy-jars</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                            <packaging>jar</packaging>
+                            <file>${ojdbc7.jar}</file>
+                            <javadoc>${javadoc.zip}</javadoc>
+                            <files>${ojdbc7_g.jar},${ojdbc7dms.jar},${ojdbc7dms_g.jar}</files>
+                            <classifiers>g,dms,dms_g</classifiers>
+                            <types>jar,jar,jar</types>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.oracle</groupId>
+        <artifactId>oracle-jdbc-deploy</artifactId>
+        <version>12.1.0.2</version>
+    </parent>
+
+    <artifactId>ojdbc6</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <ojdbc6.jar>${oracle.dir}/ojdbc6.jar</ojdbc6.jar>
+        <ojdbc6_g.jar>${oracle.dir}/ojdbc6_g.jar</ojdbc6_g.jar>
+        <ojdbc6dms.jar>${oracle.dir}/ojdbc6dms.jar</ojdbc6dms.jar>
+        <ojdbc6dms_g.jar>${oracle.dir}/ojdbc6dms_g.jar</ojdbc6dms_g.jar>
+        <javadoc.zip>${oracle.dir}/javadoc.zip</javadoc.zip>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>file-checksums</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${ojdbc6.jar}</file>
+                                    <checksum>76f2f84c383ef45832b3eea6b5fb3a6edb873b93</checksum>
+                                </fileChecksum>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${ojdbc6_g.jar}</file>
+                                    <checksum>d16639dbcce2f179e5c7017d8e5d64323be46d04</checksum>
+                                </fileChecksum>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${ojdbc6dms.jar}</file>
+                                    <checksum>97073fcb92baa2570bcbff6ac6b6b5f6cc14bca8</checksum>
+                                </fileChecksum>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${ojdbc6dms_g.jar}</file>
+                                    <checksum>9266bb4013c20aab146bcc115d161c036184d721</checksum>
+                                </fileChecksum>
+                                <fileChecksum implementation="ph.samson.maven.enforcer.rule.checksum.FileChecksum">
+                                    <file>${javadoc.zip}</file>
+                                    <checksum>fe3bcaf5f81b812bb8b026806eb90ccfdf980df9</checksum>
+                                </fileChecksum>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>deploy-jars</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                            <packaging>jar</packaging>
+                            <file>${ojdbc6.jar}</file>
+                            <javadoc>${javadoc.zip}</javadoc>
+                            <files>${ojdbc6_g.jar},${ojdbc6dms.jar},${ojdbc6dms_g.jar}</files>
+                            <classifiers>g,dms,dms_g</classifiers>
+                            <types>jar,jar,jar</types>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
